@@ -86,7 +86,7 @@ class LogWatcher(object):
 
         payload = json.dumps(message)
 
-        logger.debug("Sending payload: %s", payload)
+        logger.info("Sending payload: %s", payload)
 
         requests.put(
             self._twoline_server + '/message/%s/' % message_name,
