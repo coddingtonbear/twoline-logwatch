@@ -85,13 +85,16 @@ class LogWatcher(object):
             message_name = meta['message_name']
 
         payload = json.dumps(message)
+        url = self._twoline_server + '/message/%s/' % message_name
 
-        logger.info("Sending payload: %s", payload)
-
-        result = requests.put(
-            self._twoline_server + '/message/%s/' % message_name,
-            data=payload
+        logger.info(
+            "Sending payload: %s (%s)", (
+                payload,
+                url,
+            )
         )
+
+        result = requests.put(url, data=payload)
         if not 200 <= result.status_code < 300:
             logger.error(
                 "Non-OK status code received: %s" % result.status_code
