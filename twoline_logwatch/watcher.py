@@ -76,24 +76,28 @@ class LogWatcher(object):
         with open(self._configuration_file, 'r') as in_:
             return json.loads(in_.read())
 
-    def send_message(self, message, meta=None):
-        if meta is None:
-            meta = {}
+    def send_message(self, message, meta_override=None):
+        meta = {
+            'method': 'put',
+            'message_name': 'logwatcher',
+        }
 
-        message_name = 'logwatcher'
-        if 'message_name' in meta:
-            message_name = meta['message_name']
+        if meta_override is not None:
+            meta.update(meta_override)
 
         payload = json.dumps(message)
-        url = self._twoline_server + '/message/%s/' % message_name
+        url = (
+            self._twoline_server + '/message/%s/' % meta['message_name']
+        )
 
         logger.info(
-            "Sending payload: %s (%s)",
+            "Sending payload: %s (%s: %s)",
             payload,
+            meta['method'],
             url,
         )
 
-        result = requests.put(url, data=payload)
+        result = requests.request(meta['method'], url, data=payload)
         if not 200 <= result.status_code < 300:
             logger.error(
                 "Non-OK status code received: %s" % result.status_code
