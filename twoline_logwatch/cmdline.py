@@ -15,7 +15,7 @@ def main(args=None):
     parser = ArgumentParser()
     parser.add_argument('configuration_file', nargs='?')
     parser.add_argument('twoline_server', nargs='?')
-    parser.add_argument('--loglevel', default='DEBUG')
+    parser.add_argument('--loglevel', default='INFO')
 
     options = parser.parse_args(args)
 
