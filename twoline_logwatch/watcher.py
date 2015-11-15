@@ -101,6 +101,7 @@ class LogWatcher(object):
                     self.queue,
                 )
             )
+            proc.start()
             processes.append(proc)
 
         self.processes = processes
