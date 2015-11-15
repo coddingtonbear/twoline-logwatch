@@ -84,9 +84,13 @@ class LogWatcher(object):
         if 'message_name' in meta:
             message_name = meta['message_name']
 
+        payload = json.dumps(message)
+
+        logger.debug("Sending payload: %s", payload)
+
         requests.put(
             self._twoline_server + '/message/%s/' % message_name,
-            data=json.dumps(message)
+            data=payload
         )
 
     def run(self):
