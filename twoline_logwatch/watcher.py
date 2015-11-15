@@ -88,10 +88,9 @@ class LogWatcher(object):
         url = self._twoline_server + '/message/%s/' % message_name
 
         logger.info(
-            "Sending payload: %s (%s)", (
-                payload,
-                url,
-            )
+            "Sending payload: %s (%s)",
+            payload,
+            url,
         )
 
         result = requests.put(url, data=payload)
