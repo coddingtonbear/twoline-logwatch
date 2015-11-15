@@ -67,7 +67,7 @@ def watcher_thread(filepath, raw_patterns, queue):
 class LogWatcher(object):
     def __init__(self, configuration_file, twoline_server):
         self._configuration_file = configuration_file
-        self._twoline_server = twoline_server
+        self._twoline_server = twoline_server.strip('/')
 
         self.config = self.load_configuration()
         self.queue = Queue()
