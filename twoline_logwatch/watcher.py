@@ -26,12 +26,8 @@ def watcher_thread(filepath, raw_patterns, queue):
     patterns = get_processed_patterns(raw_patterns)
 
     proc = subprocess.Popen(
-        [
-            'tail',
-            '--max-unchanged-stats=5',
-            '-F',
-            filepath
-        ],
+        'tail --max-unchanged-stats=5 -F %s' % filepath,
+        shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
