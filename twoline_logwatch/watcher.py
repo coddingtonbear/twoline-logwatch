@@ -88,10 +88,14 @@ class LogWatcher(object):
 
         logger.info("Sending payload: %s", payload)
 
-        requests.put(
+        result = requests.put(
             self._twoline_server + '/message/%s/' % message_name,
             data=payload
         )
+        if not 200 <= result.status_code < 300:
+            logger.error(
+                "Non-OK status code received: %s" % result.status_code
+            )
 
     def run(self):
         processes = []
