@@ -42,6 +42,8 @@ def watcher_thread(filepath, raw_patterns, queue):
         else:
             break
 
+    logger.info("Watching for changes in %s", filepath)
+
     try:
         while True:
             if poller.poll(1):
