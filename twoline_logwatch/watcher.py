@@ -36,6 +36,12 @@ def watcher_thread(filepath, raw_patterns, queue):
     poller = select.poll()
     poller.register(proc.stdout)
 
+    while True:
+        if poller.poll(1):
+            proc.stdout.readline()
+        else:
+            break
+
     try:
         while True:
             if poller.poll(1):
