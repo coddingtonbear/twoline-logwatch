@@ -45,9 +45,10 @@ def watcher_thread(filepath, raw_patterns, queue):
                         match = regex.match(line)
                         if match:
                             message = copy.deepcopy(message_template)
-                            message['message'] = message['message'].format(
-                                **match.groupdict()
-                            )
+                            if 'message' in message:
+                                message['message'] = message['message'].format(
+                                    **match.groupdict()
+                                )
                             logger.info("Line matches: %s", line)
                             queue.put(message)
                         else:
