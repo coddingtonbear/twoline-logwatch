@@ -25,8 +25,10 @@ def get_processed_patterns(patterns):
 def watcher_thread(filepath, raw_patterns, queue):
     patterns = get_processed_patterns(raw_patterns)
 
+    command = 'tail --max-unchanged-stats=5 -F %s' % filepath
+    logger.debug("Executing command: %s", command)
     proc = subprocess.Popen(
-        'tail --max-unchanged-stats=5 -F %s' % filepath,
+        command,
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
@@ -46,7 +48,10 @@ def watcher_thread(filepath, raw_patterns, queue):
                             message['message'] = message['message'].format(
                                 **match.groupdict()
                             )
+                            logger.info("Line matches: %s", line)
                             queue.put(message)
+                        else:
+                            logger.debug("Line does not match: %s", line)
                 except:
                     logger.exception(
                         "An error was encountered while processing the "
