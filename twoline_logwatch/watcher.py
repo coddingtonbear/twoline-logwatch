@@ -85,7 +85,7 @@ class LogWatcher(object):
             message_name = meta['message_name']
 
         requests.put(
-            self._twoline_server + '/messages/%s' % message_name,
+            self._twoline_server + '/message/%s' % message_name,
             data=json.dumps(message)
         )
 
