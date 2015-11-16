@@ -24,7 +24,7 @@ except Exception:
 
 setup(
     name="twoline-logwatch",
-    version="0.1",
+    version="0.1.1",
     description=(
         "Watch specified folders for logging messages, and display messages "
         "using twoline for matches."
