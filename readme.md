@@ -11,7 +11,7 @@ Display messages on your 2-line LCD screen when log messages are found matching 
 Install from pip
 
 ```
-    pip install twoline-logwatch
+pip install twoline-logwatch
 ```
 
 ## Use
@@ -21,16 +21,16 @@ Just run `twoline-logwatch` with two arguments: the path to a configuration file
 If you had your configuration file stored at `/etc/twoline-logwatch.conf` and your Twoline server was running at `http://127.0.0.1:6224`, you could run:
 
 ```
-    twoline-logwatch /etc/twoline-logwatch.conf http://127.0.0.1:6224
+twoline-logwatch /etc/twoline-logwatch.conf http://127.0.0.1:6224
 ```
 
 For more information about the configuration file format, see below.
 
 ## Configuration
 
-Twoline Logwatch is configured using a simple JSON dictionary file having a single top-level key -- `files` -- having sub-keys for each path to watch, and each of those subkeys having subkeys for each of the patterns to match.  Each of those patterns can contain a single [message object](https://github.com/coddingtonbear/twoline#message-object).  Note that any named groups in the aforementioned regular expression are available as string formatting arguments in your message object's `message` field.
+Twoline Logwatch is configured using a simple JSON dictionary file having a single top-level key -- `files` -- itself having sub-keys for each path to watch, and each of those subkeys having subkeys for each of the regular expression patterns to match.  Each of those patterns has a single [message object](https://github.com/coddingtonbear/twoline#message-object) value, and the message object's `message` field can use any named groups in the aforementioned regular expression pattern as string formatting fields.  This is quite a mouthful, but the below examples should make this a bit clearer.
 
-Twoline Logwatch works by running `tail -f` on paths (or sets of paths using globbing -- Twoline Logwatch runs in a subprocess shell) you specify; checking each line of output against a set of regular expressions you set.
+Twoline Logwatch works by running `tail -f` on paths you specify; checking each line of output against a set of regular expressions you set.
 
 ```json
 {
@@ -46,10 +46,10 @@ Twoline Logwatch works by running `tail -f` on paths (or sets of paths using glo
 
 ### Meta Options
 
-Each [message object](https://github.com/coddingtonbear/twoline#message-object)can also contain a key `meta` dictionary having any number of keys used for overriding the default behavior of Twoline Logwatch when generating the message.
+Each [message object](https://github.com/coddingtonbear/twoline#message-object) can also contain a key `meta` dictionary having any number of keys used for overriding the default behavior of Twoline Logwatch when generating the message.
 
-* `message_name`: The message name under which to publish this message in Twoline.  By default, Twoline Logwatch publishes messages under a single name "logwatch".  Since all messages share a single name, only one message will be displayed at a time unless you take special efforts to define a different `message_name` for each potential message.  Note that `message_name` here is exactly the same thing as `message_id` described in Twoline's documentation.  See "Displaying multiple messages simultaneously" below for more information.
-* `method`: The HTTP method to use when sending the request to Twoline.  By default, each message sent to Twoline will be sent using the `PUT` method, but for complex interactions (see "Printing a message and later deleting it" below) you can override the HTTP method here.
+* `message_name`: The message name under which to publish this message in Twoline.  By default, Twoline Logwatch publishes messages under a single name "logwatcher".  Since all messages share a single name, only one message will be displayed at a time unless you take special efforts to define a different `message_name` for each potential message.  See "Displaying multiple messages simultaneously" below for more information.  Note that `message_name` here is exactly the same thing as `message_id` described in Twoline's documentation.
+* `method`: The HTTP method to use when sending the request to Twoline.  By default, each message sent to Twoline will be sent using the `PUT` method, but for complex interactions (see "Printing a message and later deleting it" below) you can override the HTTP method using this option.
 
 ### Examples
 
@@ -75,12 +75,14 @@ If you were to create a configuration as follows:
 }
 ```
 
-When a user logs in via SSH, the following message would be displayed on the LCD screen:
+when a user logs in via SSH, the following message would be displayed on the LCD screen:
 
-> SSH Login by
-> somebodyspecial
+```
+SSH Login by
+somebodyspecial
+```
 
-Note that, for simplicity's sake, the regular expression matches only enough to make the match turn up few (probably no) false positives, but you could make it quite a lot more rigid if you desired.  Also: the named group `username` was used in the message itself.
+Note that, for simplicity's sake, the regular expression matches only enough to make the match turn up few (probably no) false positives, but you could make it quite a lot more rigid if you desired.  Also take note of how the named group `username` was used in the message itself.
 
 #### Printing a message and later deleting it
 
